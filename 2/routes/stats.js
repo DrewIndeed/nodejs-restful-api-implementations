@@ -8,15 +8,15 @@ const getStatById = async (req, res, next) => {
     // retrieve all players from database
     const data = fs.readFileSync(path.join(__dirname, "./stats.json"));
 
-    // parse data from string to JSON object
+    // parse data from string to JSON array
     const stats = JSON.parse(data);
 
-    // the player that matches with requeted id
+    // the player that matches with requested id
     const playerStats = stats.find(
       (player) => player.id === Number(req.params.id)
     );
 
-    // if there is no player with id as requested
+    // if there is no player with id as requested, throw error
     if (!playerStats) {
       const err = new Error(`Player with id = ${req.params.id} not found`);
       err.status = 404;
@@ -29,12 +29,63 @@ const getStatById = async (req, res, next) => {
   }
 };
 
+const deleteStatById = async (req, res, next) => {
+  try {
+    // retrieve all players from database
+    const data = fs.readFileSync(path.join(__dirname, "./stats.json"));
+
+    // parse data from string to JSON array
+    const stats = JSON.parse(data);
+
+    // the player that matches with requested id
+    const playerStats = stats.find(
+      (player) => player.id === Number(req.params.id)
+    );
+
+    // if there is no player with id as requested, throw error
+    if (!playerStats) {
+      const err = new Error(
+        `Target player with id = ${req.params.id} not found. No deletion!`
+      );
+      err.status = 404;
+      throw err;
+    }
+
+    // create new stats which EXCLUDED the target player to delete
+    // by setting it as null
+    const newStats = stats
+      .map((player) => {
+        // if the player's id matches with requested id, set it as a null item
+        if (player.id === Number(req.params.id)) {
+          return null;
+          // otherwise, return player data
+        } else {
+          return player;
+        }
+      })
+      // filter out only the players that were returned
+      .filter((player) => player !== null);
+
+    // overwrite the database file to update it
+    fs.writeFileSync(
+      path.join(__dirname, "./stats.json"),
+      JSON.stringify(newStats)
+    );
+
+    // end request and set status as success
+    console.log("Deleted successfully!");
+    res.status(200).end();
+  } catch (e) {
+    next(e);
+  }
+};
+
 const getAllStats = async (req, res, next) => {
   try {
     // retrieve all players from database
     const data = fs.readFileSync(path.join(__dirname, "./stats.json"));
 
-    // parse data from string to JSON object
+    // parse data from string to JSON array
     const allStats = JSON.parse(data);
 
     // if there is no player with id as requested
@@ -48,9 +99,9 @@ const getAllStats = async (req, res, next) => {
   } catch (e) {
     next(e);
   }
-}
+};
 
 // create the route (the URL) and attach the method to it
 router.route("/").get(getAllStats);
-router.route("/api/v1/stats/:id").get(getStatById);
+router.route("/api/v1/stats/:id").get(getStatById).delete(deleteStatById);
 module.exports = router;
