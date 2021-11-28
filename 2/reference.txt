@@ -1,3 +1,5 @@
 - Article source: https://rapidapi.com/blog/nodejs-express-rest-api-example/
 - Exclusive: deploy to Heroku
 - Read more about "morgan" library here: https://expressjs.com/en/resources/middleware/morgan.html
+- Read more about "process" global object here: https://nodejs.org/api/process.html#process
+- Read more about express, express middleware (or what is app.use()) here: https://expressjs.com/en/guide/using-middleware.html
