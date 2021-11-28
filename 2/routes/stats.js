@@ -158,8 +158,43 @@ const getAllStats = async (req, res, next) => {
   }
 };
 
+const createStats = async (req, res, next) => {
+  try {
+    // retrieve all players from database
+    const data = fs.readFileSync(path.join(__dirname, "./stats.json"));
+
+    // parse data from string to JSON array
+    const allStats = JSON.parse(data);
+
+    // create object to contain new information
+    const newStatsData = {
+      id: Number(req.body.id),
+      wins: Number(req.body.wins),
+      losses: Number(req.body.losses),
+      points_scored: Number(req.body.points_scored),
+    };
+
+    // push into parsed data array
+    allStats.push(newStatsData);
+    // print to see if new data has been added to array before updating database
+    console.log(allStats);
+
+    // overwrite the database file to update it
+    fs.writeFileSync(
+      path.join(__dirname, "./stats.json"),
+      JSON.stringify(allStats)
+    );
+
+    // end request + set status as success + return updated data object
+    res.status(201).json(newStatsData);
+  } catch (e) {
+    next(e);
+  }
+};
+
 // create the route (the URL) and attach the method to it
 router.route("/").get(getAllStats);
+router.route("/api/v1/stats").post(createStats);
 router
   .route("/api/v1/stats/:id")
   .get(getStatById)
