@@ -1,0 +1,2 @@
+- Source: https://codeforgeek.com/handle-get-post-request-express-4/
+- Exclusive thing: simple demo of handling GET and POST request using Express

@@ -1,0 +1,1 @@
+- Have only implemented the GET method using get of express() and get of express.Router()
