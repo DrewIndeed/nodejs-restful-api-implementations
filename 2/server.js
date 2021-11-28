@@ -17,7 +17,7 @@ app.set("env", NODE_ENV);
 app.use(logger("tiny"));
 app.use(bodyParser.json());
 
-// setting routes as default file when the app first starts
+// setting routes as default folder when the app first starts
 app.use("/", require(path.join(__dirname, "routes")));
 
 // endpoints to handle error of code: 404 and 500
