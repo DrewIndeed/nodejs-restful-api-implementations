@@ -6,8 +6,8 @@ const app = express();
 const bp = require("body-parser");
 const path = require("path");
 const logger = require("morgan");
-const pretty = require('express-prettify');
-app.use(pretty({ query: 'pretty' }));
+const pretty = require("express-prettify");
+app.use(pretty({ query: "pretty" }));
 
 // desired PORT and development environment
 const PORT = process.env.PORT || 8888;
@@ -18,6 +18,7 @@ app.set("env", NODE_ENV);
 // use morgan and body parser
 app.use(logger("tiny"));
 app.use(bp.json());
+app.use(bp.urlencoded({ extended: true }));
 
 // setting routes as default folder when the app first starts
 app.use("/", require(path.join(__dirname, "./routes/stats.js")));
