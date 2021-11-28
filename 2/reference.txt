@@ -1,2 +1,3 @@
 - Article source: https://rapidapi.com/blog/nodejs-express-rest-api-example/
 - Exclusive: deploy to Heroku
+- Read more about "morgan" library here: https://expressjs.com/en/resources/middleware/morgan.html
