@@ -15,10 +15,10 @@ app.set("env", NODE_ENV);
 
 // use morgan and body parser
 app.use(logger("tiny"));
-app.use(bodyParser.json());
+app.use(bp.json());
 
 // setting routes as default folder when the app first starts
-app.use("/", require(path.join(__dirname, "routes")));
+app.use("/", require(path.join(__dirname, "./routes/stats.js")));
 
 // endpoints to handle error of code: 404 and 500
 app.use((req, res, next) => {
