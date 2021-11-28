@@ -29,6 +29,28 @@ const getStatById = async (req, res, next) => {
   }
 };
 
+const getAllStats = async (req, res, next) => {
+  try {
+    // retrieve all players from database
+    const data = fs.readFileSync(path.join(__dirname, "./stats.json"));
+
+    // parse data from string to JSON object
+    const allStats = JSON.parse(data);
+
+    // if there is no player with id as requested
+    if (Object.keys(allStats).length === 0) {
+      const err = new Error("Database is empty");
+      err.status = 404;
+      throw err;
+    }
+    // otherwise, return player's stat in form of json
+    res.json(allStats);
+  } catch (e) {
+    next(e);
+  }
+}
+
 // create the route (the URL) and attach the method to it
+router.route("/").get(getAllStats);
 router.route("/api/v1/stats/:id").get(getStatById);
 module.exports = router;
