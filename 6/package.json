@@ -1,0 +1,20 @@
+{
+  "name": "6",
+  "version": "1.0.0",
+  "description": "Express REST API with SQLite",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon server.js"
+  },
+  "author": "Andrew Le Nguyen",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  },
+  "dependencies": {
+    "express": "^4.17.1",
+    "md5": "^2.3.0",
+    "sqlite3": "^5.0.2"
+  }
+}
