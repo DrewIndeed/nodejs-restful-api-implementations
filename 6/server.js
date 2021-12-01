@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   next(err);
 });
 app.use((err, req, res, next) => {
-  console.log("Manual error printing:", err.message);
+  console.log("Manual Error Printing:", err.message);
   res.status(err.status || 500);
   res.json({
     error: {
