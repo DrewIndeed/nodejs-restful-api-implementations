@@ -5,6 +5,7 @@ const md5 = require("md5");
 // databases
 const db = require("./database.js");
 
+// http methods
 const getAllUsers = async (req, res) => {
   let sql = "select * from user";
   let params = [];
@@ -126,8 +127,47 @@ const udpateUserById = async (req, res) => {
   });
 };
 
+const createUser = async (req, res) => {
+  console.log(`Creating new user data`);
+  let errors = [];
+  if (!req.body.password) {
+    errors.push("No password specified");
+  }
+  if (!req.body.email) {
+    errors.push("No email specified");
+  }
+  if (errors.length) {
+    res.status(400).json({ error: errors.join(",") });
+    return;
+  }
+
+  let data = {
+    name: req.body.name,
+    email: req.body.email,
+    password: md5(req.body.password),
+  };
+
+  let sql = "INSERT INTO user (name, email, password) VALUES (?,?,?)";
+  let params = [data.name, data.email, data.password];
+  db.run(sql, params, (err) => {
+    if (err) {
+      console.log("Cannot create new user data!");
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    console.log(`Creating new user data successfully`);
+    res.json({
+      message: "Creation completed",
+      data: data,
+      id: this.lastID,
+    });
+  });
+};
+
 // create the route (the URL) and attach the method to it
 router.route("/api/users").get(getAllUsers);
+router.route("/api/user").post(createUser);
 router
   .route("/api/users/:id")
   .get(getUserById)
