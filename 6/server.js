@@ -7,6 +7,8 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const pretty = require("express-prettify");
 app.use(pretty({ query: "pretty" }));
+const logger = require("morgan");
+app.use(logger("tiny"));
 
 // desired PORT and development environment
 const PORT = process.env.PORT || 6868;

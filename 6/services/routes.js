@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const md5 = require("md5");
 
 // databases
 const db = require("./database.js");
@@ -20,7 +21,7 @@ const getAllUsers = async (req, res) => {
 };
 
 const getUserById = async (req, res) => {
-  console.log(`Getting user data of id = ${res.params.id}`);
+  console.log(`Getting user data of id = ${req.params.id}`);
   let sql = "select * from user where id = ?";
   let params = [req.params.id];
   db.get(sql, params, (err, row) => {
@@ -78,7 +79,58 @@ const deleteUserById = async (req, res) => {
   });
 };
 
+const udpateUserById = async (req, res) => {
+  console.log(`Updating user data of id = ${req.params.id}`);
+  let data = {
+    name: req.body.name,
+    email: req.body.email,
+    password: req.body.password ? md5(req.body.password) : null,
+  };
+
+  let sql = "select * from user where id = ?";
+  let params = [req.params.id];
+  db.get(sql, params, (err, row) => {
+    if (err) {
+      res.status(400).json({ error: err.message });
+      return;
+    }
+
+    if (!row) {
+      console.log(`User with id = ${req.params.id} Not Found! No update`);
+      res.status(404).json({
+        error: `User with id = ${req.params.id} Not Found! No Update!`,
+      });
+      return;
+    }
+
+    db.run(
+      `UPDATE user set 
+          name = COALESCE(?,name), 
+          email = COALESCE(?,email), 
+          password = COALESCE(?,password) 
+          WHERE id = ?`,
+      [data.name, data.email, data.password, req.params.id],
+      (err) => {
+        if (err) {
+          res.status(400).json({ error: res.message });
+          return;
+        }
+
+        console.log("Successfully update user data by id");
+        res.json({
+          message: "Update completed",
+          data: data,
+        });
+      }
+    );
+  });
+};
+
 // create the route (the URL) and attach the method to it
 router.route("/api/users").get(getAllUsers);
-router.route("/api/users/:id").get(getUserById).delete(deleteUserById);
+router
+  .route("/api/users/:id")
+  .get(getUserById)
+  .delete(deleteUserById)
+  .put(udpateUserById);
 module.exports = router;
