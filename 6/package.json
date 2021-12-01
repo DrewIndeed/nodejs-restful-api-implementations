@@ -10,6 +10,7 @@
   "author": "Andrew Le Nguyen",
   "license": "ISC",
   "devDependencies": {
+    "express-prettify": "^0.1.1",
     "nodemon": "^2.0.15"
   },
   "dependencies": {

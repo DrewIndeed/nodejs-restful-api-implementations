@@ -5,6 +5,8 @@ const app = express();
 // other than express
 const bodyParser = require("body-parser");
 const path = require("path");
+const pretty = require("express-prettify");
+app.use(pretty({ query: "pretty" }));
 
 // desired PORT and development environment
 const PORT = process.env.PORT || 6868;
@@ -17,7 +19,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // setting routes as default folder when the app first starts
-app.use("/", require(path.join(__dirname, "./routes.js")));
+app.use("/", require(path.join(__dirname, "./services/routes.js")));
 
 // endpoints to handle error of code: 404 and 500
 app.use((req, res, next) => {
